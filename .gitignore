@@ -1,3 +1,7 @@
+# Node.js
+node_modules/
+.next/
+out/
 # Virtual environments
 venv/
 .venv/
@@ -25,3 +29,6 @@ backend/uploads/*
 Thumbs.db
 *.log
 .env
+
+# macOS metadata files
+._*
