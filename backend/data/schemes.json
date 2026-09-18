@@ -1,0 +1,170 @@
+[
+  {
+    "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+    "description": "Central sector scheme providing income support of Rs. 6,000 per year to all landholding farmer families across the country.",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "category": "Agriculture",
+    "benefits": "Rs. 6,000 per year transferred directly into bank accounts in three equal 4-monthly installments.",
+    "application_url": "https://pmkisan.gov.in",
+    "active": true,
+    "rules": [
+      {
+        "field": "farmer",
+        "operator": "==",
+        "value": "true"
+      },
+      {
+        "field": "annual_income",
+        "operator": "<=",
+        "value": "400000"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "Official PM-KISAN Portal",
+        "source_url": "https://pmkisan.gov.in",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  },
+  {
+    "name": "Ayushman Bharat - PM-JAY",
+    "description": "World's largest government-funded health assurance scheme providing comprehensive secondary and tertiary inpatient care.",
+    "ministry": "Ministry of Health and Family Welfare",
+    "category": "Healthcare",
+    "benefits": "Cashless health cover up to Rs. 5,00,000 per eligible family per year across empaneled public and private hospitals.",
+    "application_url": "https://beneficiary.nha.gov.in",
+    "active": true,
+    "rules": [
+      {
+        "field": "annual_income",
+        "operator": "<=",
+        "value": "250000"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "National Health Authority",
+        "source_url": "https://nha.gov.in/PM-JAY",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  },
+  {
+    "name": "National Scholarship Scheme (Post-Matric)",
+    "description": "Financial assistance for meritorious and needy students belonging to economically disadvantaged backgrounds for post-matriculation studies.",
+    "ministry": "Ministry of Social Justice and Empowerment",
+    "category": "Education",
+    "benefits": "Full college tuition fee reimbursement plus monthly living and book allowances.",
+    "application_url": "https://scholarships.gov.in",
+    "active": true,
+    "rules": [
+      {
+        "field": "student",
+        "operator": "==",
+        "value": "true"
+      },
+      {
+        "field": "annual_income",
+        "operator": "<=",
+        "value": "250000"
+      },
+      {
+        "field": "age",
+        "operator": ">=",
+        "value": "15"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "National Scholarship Portal",
+        "source_url": "https://scholarships.gov.in",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  },
+  {
+    "name": "Pradhan Mantri Awas Yojana (PMAY)",
+    "description": "Comprehensive mission to provide housing for all by assisting in constructing pucca houses with basic amenities.",
+    "ministry": "Ministry of Housing and Urban Affairs",
+    "category": "Housing",
+    "benefits": "Interest subsidy up to Rs. 2.67 lakh on home loans or direct construction grants for low income families.",
+    "application_url": "https://pmaymis.gov.in",
+    "active": true,
+    "rules": [
+      {
+        "field": "annual_income",
+        "operator": "<=",
+        "value": "300000"
+      },
+      {
+        "field": "age",
+        "operator": ">=",
+        "value": "18"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "PMAY Urban Portal",
+        "source_url": "https://pmaymis.gov.in",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  },
+  {
+    "name": "Atal Pension Yojana (APY)",
+    "description": "Government-backed guaranteed pension scheme aimed at unorganized sector workers.",
+    "ministry": "Ministry of Finance",
+    "category": "Social Security",
+    "benefits": "Guaranteed minimum monthly pension of Rs. 1,000 to Rs. 5,000 after attaining 60 years of age.",
+    "application_url": "https://enps.nsdl.com/eNPS/ApySubRegistration.html",
+    "active": true,
+    "rules": [
+      {
+        "field": "age",
+        "operator": ">=",
+        "value": "18"
+      },
+      {
+        "field": "age",
+        "operator": "<=",
+        "value": "40"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "PFRDA Portal",
+        "source_url": "https://www.pfrda.org.in",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  },
+  {
+    "name": "KALIA Scheme (Krushak Assistance for Livelihood)",
+    "description": "State assistance scheme by Odisha Government to accelerate agricultural prosperity and alleviate poverty for farmers.",
+    "ministry": "Department of Agriculture & Farmers' Empowerment, Govt of Odisha",
+    "category": "Agriculture",
+    "benefits": "Financial assistance of Rs. 10,000 per family for cultivation along with interest-free crop loans.",
+    "application_url": "https://kalia.odisha.gov.in",
+    "active": true,
+    "rules": [
+      {
+        "field": "state",
+        "operator": "==",
+        "value": "Odisha"
+      },
+      {
+        "field": "farmer",
+        "operator": "==",
+        "value": "true"
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "KALIA Portal Odisha",
+        "source_url": "https://kalia.odisha.gov.in",
+        "last_verified": "2025-01-01"
+      }
+    ]
+  }
+]
