@@ -1,13 +1,17 @@
+import os
+from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-
-DATABASE_URL = "sqlite:///./schemesaathi.db"
-
+BASE_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_DB_FILE = (BASE_DIR / "schemesaathi.db").as_posix()
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL or DATABASE_URL.startswith("sqlite:///./"):
+    DATABASE_URL = f"sqlite:///{DEFAULT_DB_FILE}"
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 )
 
 

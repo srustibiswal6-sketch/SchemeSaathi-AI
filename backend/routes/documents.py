@@ -1,59 +1,86 @@
-from typing import List
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from database.database import get_db
-from schemas.document import DocumentAnalysisResponse, DocumentResponse
-from services import document_service, profile_service
+from services import document_service
 
 
 router = APIRouter(
     prefix="/api/documents",
-    tags=["Documents"]
+    tags=["Documents"],
 )
 
 
-@router.post("/analyze", response_model=DocumentAnalysisResponse, status_code=status.HTTP_201_CREATED)
-def upload_and_analyze_document(
-    profile_id: int = Form(..., description="The ID of the citizen profile"),
-    document_type: str = Form(..., description="Type of document (e.g. aadhaar, income_certificate, land_records)"),
-    file: UploadFile = File(..., description="Document file to upload (.pdf, .png, .jpg, .jpeg)"),
-    db: Session = Depends(get_db)
+@router.post("/upload", status_code=201)
+def upload_document(
+    profile_id: int = Form(...),
+    document_type: str = Form(default="Unknown"),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
     """
-    Upload and analyze a citizen document.
-    Stores the document securely and initializes metadata extraction.
-    Designed with a clean integration point for AWS Textract.
+    Upload a citizen document.
+    File is saved securely and analyzed using the Textract pipeline (or mock in demo mode).
+    Returns detected document type and classification confidence.
     """
-    profile = profile_service.get_profile_by_id(db=db, profile_id=profile_id)
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Citizen profile with ID {profile_id} not found"
-        )
-
     try:
         result = document_service.save_and_analyze_document(
             db=db,
             profile_id=profile_id,
             document_type=document_type,
-            file=file
+            file=file,
         )
         return result
     except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
+            status_code=500,
+            detail=f"Document processing failed: {str(e)}",
         )
 
 
-@router.get("/{profile_id}", response_model=List[DocumentResponse])
-def get_user_documents(profile_id: int, db: Session = Depends(get_db)):
-    """Retrieve all uploaded documents for a citizen profile."""
-    profile = profile_service.get_profile_by_id(db=db, profile_id=profile_id)
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Citizen profile with ID {profile_id} not found"
+@router.post("/analyze", status_code=201)
+def analyze_document_only(
+    profile_id: int = Form(...),
+    document_type: str = Form(default="Unknown"),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Analyze a document without persisting to a profile.
+    Returns document type classification and extracted fields.
+    """
+    try:
+        result = document_service.save_and_analyze_document(
+            db=db,
+            profile_id=profile_id,
+            document_type=document_type,
+            file=file,
         )
-    return document_service.get_documents_by_profile(db=db, profile_id=profile_id)
+        return {
+            **result,
+            "mode": "analysis_only",
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+
+@router.get("/profile/{profile_id}")
+@router.get("/{profile_id}")
+def get_profile_documents(profile_id: int, db: Session = Depends(get_db)):
+    """Get all documents uploaded by a citizen profile."""
+    docs = document_service.get_documents_by_profile(db=db, profile_id=profile_id)
+    return [
+        {
+            "id": d.id,
+            "document_type": d.document_type,
+            "file_name": d.file_name,
+            "status": d.status,
+            "confidence": d.confidence,
+            "created_at": d.created_at.isoformat() if d.created_at else None,
+        }
+        for d in docs
+    ]

@@ -1,123 +1,140 @@
+"""
+SchemeSaathi AI — AI Chat Service
+
+Orchestrates: profile lookup → scheme retrieval → RAG → BedrockService explanation.
+The LLM explains deterministic results. It does NOT make eligibility decisions.
+"""
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from sqlalchemy.orm import Session
-from services import scheme_service
+
+from services import scheme_service, search_service
+from services import bedrock_service
+
+DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() in ("true", "1", "yes")
 
 
-def generate_chat_response(db: Session, profile_id: int, message: str) -> Dict[str, Any]:
+def generate_chat_response(
+    db: Session,
+    profile_id: int,
+    message: str,
+    language: str = "en",
+) -> Dict[str, Any]:
     """
-    Generate an explainable AI assistant response grounded strictly in backend eligibility calculations.
-    
-    Principles:
-    1. The AI explains deterministic eligibility results rather than inventing or deciding them.
-    2. If an OPENAI_API_KEY is configured in the environment, it can ground an LLM call.
-    3. If no LLM credentials are set, it returns an intelligent deterministic explanation based
-       on the user's matched schemes and queries.
+    Generate a grounded chat response for a citizen with a saved profile.
+    Uses deterministic eligibility results — LLM only explains, never decides.
     """
     matches_data = scheme_service.match_schemes_for_profile(db, profile_id)
     if not matches_data:
         return {
-            "response": f"Profile with ID {profile_id} could not be found. Please create or verify your citizen profile first.",
-            "mode": "rule_based_assistant",
-            "grounded_context": None
+            "response": f"Profile with ID {profile_id} could not be found. Please create your citizen profile first.",
+            "mode": "error",
+            "grounded_context": None,
         }
 
     citizen_name = matches_data["citizen_name"]
-    eligible_schemes = [m for m in matches_data["matches"] if m["status"] == "eligible"]
-    ineligible_schemes = [m for m in matches_data["matches"] if m["status"] == "ineligible"]
+    all_matches = matches_data["matches"]
+    eligible = [m for m in all_matches if m["status"] == "eligible"]
 
-    openai_api_key = os.getenv("OPENAI_API_KEY")
+    # Build context for LLM
+    profile_dict = {
+        "name": citizen_name,
+        "profile_id": profile_id,
+    }
+    context_schemes = [
+        {
+            "name": m["scheme_name"],
+            "category": m["category"],
+            "benefits": m["benefits"],
+            "status": m["status"],
+        }
+        for m in all_matches[:8]
+    ]
 
-    # If OpenAI API Key is present, we could invoke OpenAI with strict system grounding
-    if openai_api_key:
-        try:
-            import urllib.request
-            import json
+    raw_response = bedrock_service.answer_question(
+        question=message,
+        context_schemes=context_schemes,
+        profile=profile_dict,
+    )
 
-            system_prompt = (
-                "You are SchemeSaathi AI, a friendly and empathetic government scheme discovery assistant. "
-                "CRITICAL: The backend has ALREADY computed deterministic eligibility. You MUST NEVER recalculate "
-                "or alter eligibility conclusions. You only explain the provided facts clearly to the citizen.\n"
-                f"Citizen Profile: {citizen_name}\n"
-                f"Eligible schemes ({len(eligible_schemes)}): {json.dumps(eligible_schemes)}\n"
-                f"Ineligible schemes ({len(ineligible_schemes)}): {json.dumps(ineligible_schemes)}\n"
-            )
-
-            req_payload = {
-                "model": "gpt-3.5-turbo",
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": message}
-                ],
-                "temperature": 0.3
-            }
-
-            req = urllib.request.Request(
-                "https://api.openai.com/v1/chat/completions",
-                data=json.dumps(req_payload).encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {openai_api_key}"
-                }
-            )
-
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                result_json = json.loads(resp.read().decode("utf-8"))
-                llm_reply = result_json["choices"][0]["message"]["content"]
-                return {
-                    "response": llm_reply,
-                    "mode": "llm_grounded",
-                    "grounded_context": {
-                        "eligible_count": len(eligible_schemes),
-                        "total_evaluated": matches_data["total_schemes_evaluated"]
-                    }
-                }
-        except Exception as e:
-            # Fallback smoothly to deterministic assistant if external LLM fails or times out
-            pass
-
-    # Deterministic natural language synthesis (Development / Hackathon default)
-    user_msg_lower = message.lower()
-
-    if any(q in user_msg_lower for q in ["eligible", "schemes", "benefit", "apply", "which", "what", "find"]):
-        if eligible_schemes:
-            scheme_bullets = "\n".join([
-                f"• **{s['scheme_name']}** ({s['category']}): {s['benefits']}"
-                for s in eligible_schemes
-            ])
-            explanation = (
-                f"Namaste {citizen_name}! Based on your verified profile, you are currently eligible for "
-                f"**{len(eligible_schemes)} government scheme(s)**:\n\n{scheme_bullets}\n\n"
-                f"Would you like guidance on the required documents or help tracking your application?"
-            )
-        else:
-            ineligible_summary = "; ".join([f"{s['scheme_name']}: {s['reason']}" for s in ineligible_schemes[:3]])
-            explanation = (
-                f"Namaste {citizen_name}. Currently, based on your registered details, you do not meet the criteria "
-                f"for the evaluated schemes ({ineligible_summary}). You may update your profile or explore other state-level initiatives."
-            )
-    elif any(q in user_msg_lower for q in ["document", "docs", "upload", "proof", "aadhaar", "certificate"]):
-        explanation = (
-            f"Hello {citizen_name}, to proceed with your eligible schemes, common required documents include:\n"
-            f"1. **Identity Proof**: Aadhaar Card or Voter ID\n"
-            f"2. **Income Certificate**: Issued by competent revenue authorities\n"
-            f"3. **Bank Account Passbook**: Linked to Aadhaar for Direct Benefit Transfer (DBT)\n"
-            f"4. **Category/Occupation Proof**: Student ID card or Land records/Farmer registration if applicable.\n\n"
-            f"You can upload these via the `/api/documents/analyze` endpoint for automatic record verification."
-        )
-    else:
-        explanation = (
-            f"Hello {citizen_name}! I am your SchemeSaathi AI assistant. "
-            f"You are currently matched with {len(eligible_schemes)} eligible schemes. "
-            f"You can ask me: 'Which schemes am I eligible for?', 'What documents do I need?', or 'How do I apply?'"
-        )
+    final_response = bedrock_service.translate_response(raw_response, language)
 
     return {
-        "response": explanation,
-        "mode": "rule_based_assistant",
+        "response": final_response,
+        "mode": "demo_mock" if DEMO_MODE else "bedrock_grounded",
         "grounded_context": {
-            "eligible_count": len(eligible_schemes),
+            "eligible_count": len(eligible),
             "total_evaluated": matches_data["total_schemes_evaluated"],
-            "note": "Response synthesized deterministically from backend rule evaluation. Ready for AWS Bedrock/OpenAI integration."
+            "schemes_shown": [m["scheme_name"] for m in eligible[:5]],
+            "disclaimer": (
+                "Scheme information is based on available data. "
+                "Always verify on the official government portal."
+            ),
+        },
+    }
+
+
+def generate_stateless_chat_response(
+    db: Session,
+    profile: Dict[str, Any],
+    message: str,
+    language: str = "en",
+) -> Dict[str, Any]:
+    """
+    Generate a grounded chat response using a profile dict (no DB profile_id needed).
+    Used when the user chats without having created a saved profile.
+    """
+    retrieved = search_service.retrieve_relevant_schemes(db=db, profile=profile)
+
+    context_schemes = [
+        {
+            "name": r["scheme"].name,
+            "category": r["scheme"].category,
+            "benefits": r["scheme"].benefits,
+            "status": r["status"],
+            "matched_criteria": len(r["matched_rules"]),
         }
+        for r in retrieved[:8]
+    ]
+
+    profile_for_llm = {
+        "name": profile.get("name") or "Citizen",
+        "age": profile.get("age"),
+        "state": profile.get("state"),
+        "annual_income": profile.get("annual_income") or profile.get("annualIncome"),
+        "student": profile.get("student") or profile.get("isStudent"),
+        "farmer": profile.get("farmer") or profile.get("isFarmer"),
+    }
+
+    raw_response = bedrock_service.answer_question(
+        question=message,
+        context_schemes=context_schemes,
+        profile=profile_for_llm,
+    )
+
+    final_response = bedrock_service.translate_response(raw_response, language)
+    eligible_count = len([r for r in retrieved if r["status"] == "potentially_eligible"])
+
+    return {
+        "response": final_response,
+        "mode": "demo_mock" if DEMO_MODE else "bedrock_grounded",
+        "matched_schemes": [
+            {
+                "id": r["scheme"].id,
+                "name": r["scheme"].name,
+                "category": r["scheme"].category,
+                "status": r["status"],
+                "application_url": r["scheme"].application_url,
+            }
+            for r in retrieved[:5]
+            if r["status"] in ("potentially_eligible", "needs_more_information")
+        ],
+        "grounded_context": {
+            "eligible_count": eligible_count,
+            "total_evaluated": len(retrieved),
+            "disclaimer": (
+                "Scheme information is based on available data. "
+                "Always verify on the official government portal."
+            ),
+        },
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useProfile } from '../context/ProfileContext';
 import { getSchemes } from '../services/api';
 import SchemeCard from '../components/SchemeCard';
@@ -17,10 +17,26 @@ const CATEGORIES = ['All', 'Education', 'Agriculture', 'Health', 'Business', 'Ho
 
 export default function Schemes() {
   const { profile } = useProfile();
+  const [searchParams] = useSearchParams();
   const [schemes, setSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  
+  const initialCategory = searchParams.get('category') || 'All';
+  const initialQuery = searchParams.get('q') || '';
+  
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat && CATEGORIES.includes(cat)) {
+      setSelectedCategory(cat);
+    }
+    const q = searchParams.get('q');
+    if (q) {
+      setSearchQuery(q);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     let isMounted = true;

@@ -1,34 +1,61 @@
-# Node.js
-node_modules/
-.next/
-out/
-# Virtual environments
-venv/
-.venv/
-env/
-ENV/
+# SchemeSaathi AI — .gitignore
+# ============================================================
 
-# Python cache
+# Environment files (NEVER commit)
+.env
+.env.local
+.env.*.local
+*.pem
+credentials
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.pyc
+*.so
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
 
-# Local SQLite databases
+# Database files
 *.db
+*.sqlite
 *.sqlite3
 
-# Uploaded documents (keep directory, ignore uploaded citizen files)
-backend/uploads/*
-!backend/uploads/.gitkeep
+# Uploaded documents (private citizen files)
+backend/uploads/
+uploads/
 
-# IDE & OS files
-.vscode/
-.idea/
+# Node.js
+node_modules/
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+frontend/.vite/
+
+# IDE / OS
 .DS_Store
-Thumbs.db
-*.log
-.env
-
-# macOS metadata files
 ._*
+*/._*
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini
+
+# AWS
+.aws/
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/

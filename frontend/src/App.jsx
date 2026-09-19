@@ -11,15 +11,14 @@ import Schemes from './pages/Schemes';
 import SchemeDetails from './pages/SchemeDetails';
 import Documents from './pages/Documents';
 import ApplicationGuide from './pages/ApplicationGuide';
+import Chat from './pages/Chat';
+import About from './pages/About';
 
-// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
-
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [pathname]);
-
   return null;
 }
 
@@ -38,6 +37,8 @@ function App() {
               <Route path="/scheme/:id" element={<SchemeDetails />} />
               <Route path="/documents" element={<Documents />} />
               <Route path="/application/:id" element={<ApplicationGuide />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/about" element={<About />} />
             </Routes>
           </main>
           <Footer />

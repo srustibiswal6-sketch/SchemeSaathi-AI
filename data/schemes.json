@@ -1,0 +1,297 @@
+[
+  {
+    "id": "post-matric-scholarship",
+    "name": "Post-Matric Scholarship for SC/OBC Students",
+    "category": "Education",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Social Justice and Empowerment, Government of India",
+    "description": "Financial assistance to students from economically disadvantaged SC/OBC backgrounds studying at post-matriculation or post-secondary stages to enable completion of education.",
+    "benefits": [
+      "Full reimbursement of tuition and non-refundable fees",
+      "Monthly maintenance allowance up to ₹1,200/month for hostellers",
+      "Monthly allowance of ₹550/month for day scholars",
+      "Additional disability allowance of ₹2,000/annum for benchmark disability"
+    ],
+    "eligibility_rules": [
+      { "field": "student", "operator": "==", "value": true, "label": "Enrolled Student (post-matriculation)" },
+      { "field": "annual_income", "operator": "<=", "value": 250000, "label": "Annual Family Income ≤ ₹2,50,000" },
+      { "field": "age", "operator": ">=", "value": 15, "label": "Age ≥ 15 years" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Income Certificate (below ₹2.5 lakh)",
+      "Student ID / Bonafide Certificate",
+      "Bank Passbook (DBT-enabled)",
+      "Previous Year Marksheet",
+      "Caste Certificate (SC/OBC)"
+    ],
+    "application_steps": [
+      "Register on National Scholarship Portal (scholarships.gov.in)",
+      "Log in and select 'Fresh Application'",
+      "Fill personal, academic, and bank details accurately",
+      "Upload all required documents in PDF/JPEG format",
+      "Submit application and note your Application ID",
+      "Track status on the portal using your Application ID"
+    ],
+    "official_url": "https://scholarships.gov.in",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "ayushman-bharat-pmjay",
+    "name": "Ayushman Bharat — PM-JAY Health Cover",
+    "category": "Healthcare",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Health and Family Welfare, Government of India",
+    "description": "Comprehensive government-funded health assurance providing cashless secondary and tertiary inpatient care to eligible families.",
+    "benefits": [
+      "Cashless health cover of up to ₹5,00,000 per eligible family per year",
+      "Coverage across empaneled public and private hospitals nationwide",
+      "No cap on family size or age for coverage",
+      "Pre-existing conditions covered from day one"
+    ],
+    "eligibility_rules": [
+      { "field": "annual_income", "operator": "<=", "value": 250000, "label": "Annual Family Income ≤ ₹2,50,000" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Ration Card / NFSA Card",
+      "Income Certificate (below ₹2.5 lakh)",
+      "Bank Passbook"
+    ],
+    "application_steps": [
+      "Check eligibility on beneficiary.nha.gov.in using Aadhaar or ration card",
+      "Visit nearest empaneled hospital or Common Service Centre (CSC)",
+      "Request Ayushman Card generation with Aadhaar OTP verification",
+      "Download Ayushman Bharat Card (ABHA card)",
+      "Present card at empaneled hospital for cashless treatment"
+    ],
+    "official_url": "https://beneficiary.nha.gov.in",
+    "source_url": "https://nha.gov.in/PM-JAY",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+    "category": "Agriculture",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Agriculture and Farmers Welfare, Government of India",
+    "description": "Income support scheme providing ₹6,000 per year directly into bank accounts of landholding farmer families across India.",
+    "benefits": [
+      "₹6,000 per year in three equal installments of ₹2,000",
+      "Direct transfer to Aadhaar-linked bank account via DBT",
+      "No intermediaries — direct to farmer's account"
+    ],
+    "eligibility_rules": [
+      { "field": "farmer", "operator": "==", "value": true, "label": "Active Farmer / Land Owner" },
+      { "field": "annual_income", "operator": "<=", "value": 400000, "label": "Annual Income ≤ ₹4,00,000" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Land Ownership Record (Khata/Khasra)",
+      "Bank Passbook (DBT-enabled, Aadhaar-seeded)",
+      "Mobile number linked to Aadhaar"
+    ],
+    "application_steps": [
+      "Visit pmkisan.gov.in and click 'Farmer Corner'",
+      "Select 'New Farmer Registration'",
+      "Enter Aadhaar number and complete OTP verification",
+      "Fill land and bank account details accurately",
+      "Submit — registration is verified by local revenue authority",
+      "Receive installments directly in bank account after verification"
+    ],
+    "official_url": "https://pmkisan.gov.in",
+    "source_url": "https://pmkisan.gov.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "pmay-urban",
+    "name": "Pradhan Mantri Awas Yojana — Urban (PMAY-U)",
+    "category": "Housing",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Housing and Urban Affairs, Government of India",
+    "description": "Housing for All mission providing financial assistance for construction or purchase of affordable housing for urban citizens.",
+    "benefits": [
+      "Interest subsidy up to ₹2.67 lakh on home loans",
+      "Direct grant for construction of pucca house with basic amenities",
+      "Coverage for Economically Weaker Section (EWS) and Low Income Group (LIG)"
+    ],
+    "eligibility_rules": [
+      { "field": "annual_income", "operator": "<=", "value": 300000, "label": "Annual Income ≤ ₹3,00,000 (EWS/LIG)" },
+      { "field": "age", "operator": ">=", "value": 18, "label": "Age ≥ 18 years" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Income Certificate (EWS/LIG category)",
+      "Bank Passbook",
+      "Property / Land Documents",
+      "Affidavit of No Pucca House",
+      "Bank Loan Sanction Letter (for CLSS)"
+    ],
+    "application_steps": [
+      "Visit pmaymis.gov.in and select appropriate component",
+      "Register using Aadhaar-linked mobile number",
+      "Fill application with property and income details",
+      "Upload required documents",
+      "Submit to Urban Local Body (ULB) for verification",
+      "Track application status on portal after submission"
+    ],
+    "official_url": "https://pmaymis.gov.in",
+    "source_url": "https://pmaymis.gov.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "atal-pension-yojana",
+    "name": "Atal Pension Yojana (APY)",
+    "category": "Social Security",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Finance / PFRDA",
+    "description": "Government-backed guaranteed pension scheme for unorganized sector workers ensuring fixed pension after age 60.",
+    "benefits": [
+      "Guaranteed minimum monthly pension of ₹1,000 to ₹5,000 per month after age 60",
+      "Based on contribution amount selected at enrollment",
+      "Government co-contributes 50% for eligible subscribers"
+    ],
+    "eligibility_rules": [
+      { "field": "age", "operator": ">=", "value": 18, "label": "Age ≥ 18 years" },
+      { "field": "age", "operator": "<=", "value": 40, "label": "Age ≤ 40 years" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Bank Account (savings account)",
+      "Mobile number linked to Aadhaar"
+    ],
+    "application_steps": [
+      "Visit your bank branch or use net banking portal",
+      "Fill APY enrollment form with Aadhaar and bank details",
+      "Select desired monthly pension amount (₹1,000 to ₹5,000)",
+      "Set up auto-debit from savings account for monthly contributions",
+      "Receive PRAN (Permanent Retirement Account Number) via SMS/email"
+    ],
+    "official_url": "https://enps.nsdl.com",
+    "source_url": "https://www.pfrda.org.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "kalia-odisha",
+    "name": "KALIA Scheme (Krushak Assistance for Livelihood)",
+    "category": "Agriculture",
+    "government_level": "State",
+    "state": "Odisha",
+    "department": "Department of Agriculture & Farmers' Empowerment, Government of Odisha",
+    "description": "Odisha Government scheme providing comprehensive financial assistance to small and marginal farmers, landless agricultural labourers, and vulnerable agricultural households.",
+    "benefits": [
+      "₹10,000 per family per year for cultivation support",
+      "₹2,000 per vulnerable person for livelihood activities",
+      "Interest-free crop loans for eligible farmers",
+      "Life insurance of ₹2 lakh and accidental insurance of ₹2 lakh"
+    ],
+    "eligibility_rules": [
+      { "field": "state", "operator": "==", "value": "Odisha", "label": "Resident of Odisha" },
+      { "field": "farmer", "operator": "==", "value": true, "label": "Farmer / Agricultural Worker" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Land Records (Khatiyan/RoR) for farmers",
+      "Bank Passbook (linked with Aadhaar)",
+      "Mobile number"
+    ],
+    "application_steps": [
+      "Visit kalia.odisha.gov.in or Common Service Centre",
+      "Check if your name appears in the KALIA beneficiary list",
+      "If not listed, submit grievance online with Aadhaar details",
+      "Verify bank account details and Aadhaar seeding",
+      "Receive benefits directly in Aadhaar-linked bank account"
+    ],
+    "official_url": "https://kalia.odisha.gov.in",
+    "source_url": "https://kalia.odisha.gov.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "medhabruti-odisha",
+    "name": "Mukhyamantri Medhabruti Scholarship (Odisha)",
+    "category": "Education",
+    "government_level": "State",
+    "state": "Odisha",
+    "department": "School & Mass Education Department, Government of Odisha",
+    "description": "Merit-based scholarship for students who have passed Class 10 and 12 from Odisha schools with distinction, encouraging higher education.",
+    "benefits": [
+      "Annual scholarship of ₹5,000 to ₹15,000 depending on marks",
+      "For meritorious students continuing higher studies in Odisha"
+    ],
+    "eligibility_rules": [
+      { "field": "student", "operator": "==", "value": true, "label": "Enrolled Student" },
+      { "field": "state", "operator": "==", "value": "Odisha", "label": "Resident of Odisha" },
+      { "field": "age", "operator": "<=", "value": 25, "label": "Age ≤ 25 years" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "Class 10 / Class 12 Marksheet",
+      "Institution Enrollment Certificate",
+      "Bank Passbook",
+      "Income Certificate"
+    ],
+    "application_steps": [
+      "Visit scholarship.odisha.gov.in and register",
+      "Select 'Mukhyamantri Medhabruti' scheme",
+      "Enter board exam roll number and marks",
+      "Upload documents and bank details",
+      "Submit — institution verifies and forwards to district",
+      "Scholarship credited annually to bank account"
+    ],
+    "official_url": "https://scholarship.odisha.gov.in",
+    "source_url": "https://scholarship.odisha.gov.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  },
+  {
+    "id": "pm-mudra-shishu",
+    "name": "PM Mudra Yojana — Micro Enterprise Loan",
+    "category": "Business",
+    "government_level": "Central",
+    "state": "All India",
+    "department": "Ministry of Finance / MUDRA",
+    "description": "Collateral-free micro loans for non-farm micro and small enterprises to support business startup and expansion.",
+    "benefits": [
+      "Collateral-free loans up to ₹50,000 (Shishu category)",
+      "Loans up to ₹5 lakh (Kishor) or ₹10 lakh (Tarun)",
+      "Subsidized interest rates through participating banks and MFIs",
+      "MUDRA RuPay Debit Card for business expenses"
+    ],
+    "eligibility_rules": [
+      { "field": "is_business_owner", "operator": "==", "value": true, "label": "Micro/Small Business Owner" },
+      { "field": "age", "operator": ">=", "value": 18, "label": "Age ≥ 18 years" }
+    ],
+    "required_documents": [
+      "Aadhaar Card",
+      "PAN Card",
+      "Business Registration / Udyam Certificate",
+      "Bank Passbook (6 months statement)",
+      "Project Report / Business Plan",
+      "Quotation for assets to be purchased"
+    ],
+    "application_steps": [
+      "Identify your loan category: Shishu (up to ₹50K), Kishor (₹50K-5L), Tarun (₹5L-10L)",
+      "Visit nearest bank, MFI, or NBFC participating in MUDRA scheme",
+      "Fill MUDRA loan application form",
+      "Submit KYC documents and business details",
+      "Bank processes and sanctions loan — typically 7-14 working days",
+      "Receive MUDRA Card (RuPay) for business expenses"
+    ],
+    "official_url": "https://www.mudra.org.in",
+    "source_url": "https://www.mudra.org.in",
+    "last_verified": "2025-01-01",
+    "demo_data": true
+  }
+]

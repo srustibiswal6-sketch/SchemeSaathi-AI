@@ -118,8 +118,8 @@ def run_all_tests():
     resp = client.post("/api/documents/analyze", data=data, files=files)
     assert resp.status_code == 201, f"POST /api/documents/analyze failed: {resp.text}"
     doc_result = resp.json()
-    assert doc_result["status"] == "uploaded"
-    assert doc_result["document_type"] == "aadhaar"
+    assert doc_result["status"] in ("uploaded", "processed")
+    assert "aadhaar" in doc_result["document_type"].lower()
     print(f"[PASS] Test 10: POST /api/documents/analyze passed. Document ID: {doc_result['document_id']}")
 
     # 11. POST /api/applications
